@@ -1,3 +1,40 @@
 body {
-  font-size: 100px;
+  font-size: 50px;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
+.MainContainer {
+  width: 800px;
+  height: 800px;
+  display: flex;
+  flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-between;
+}
+
+.Logo {
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.Middle {
+  display: flex;
+  width: 600px;
+  height: 600px;
+}
+
+.Board {
+  width: 500px;
+  height: 500px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
 }

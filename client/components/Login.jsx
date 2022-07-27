@@ -1,10 +1,10 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react';
 // const fetch = require('node-fetch')
 
 function Login(props) {
   return (
     <div className='login'>
-      <div className = 'loginlabel'>Login</div>
+      <div className='loginlabel'>Login</div>
       <label className='username'>Username: <input type='text' value={props.usernameValue} onChange={(e) => props.userChange(e)}></input></label>
       <label className='password'>Password: <input type='text' value={props.passwordValue} onChange={(e) => props.passChange(e)}></input></label>
       <div className='buttons'>
@@ -12,7 +12,7 @@ function Login(props) {
         <button className='registerButton' onClick={props.register}>Register</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default Login;

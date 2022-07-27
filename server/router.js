@@ -1,12 +1,12 @@
 const express = require('express');
-const controller = require('./controller.js')
+const controller = require('./controller');
 
 const router = express.Router();
 
-router.post('/', controller.loginController, (req,res) => {
-  res.status(200).json({...res.locals})
-})
+router.post('/', controller.loginController, (req, res) => {
+  res.status(200).json({ ...res.locals });
+});
 
-router.post('/signup', controller.signupController, (req, res) => res.status(200).json(res.locals.newUser))
+router.post('/signup', controller.signupController, (req, res) => res.status(200).json(res.locals.newUser));
 
 module.exports = router;

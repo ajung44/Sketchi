@@ -29,6 +29,10 @@ body {
   height: 600px;
 }
 
+.Left{
+  width: 50px;
+}
+
 .Board {
   width: 500px;
   height: 500px;
@@ -36,12 +40,29 @@ body {
   margin:auto;
 }
 
+.Tools {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.toolBox {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  justify-content: space-evenly;
+}
 .login {
   display: flex;
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
   font-size: 30px;
+}
+
+.sizeSlider {
+  -webkit-appearance: slider-vertical;
 }
 
 .loginlabel {

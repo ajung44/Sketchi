@@ -9,4 +9,12 @@ router.post('/', controller.loginController, (req, res) => {
 
 router.post('/signup', controller.signupController, (req, res) => res.status(200).json(res.locals.newUser));
 
+router.post('/drawings', controller.getFiles, controller.fileToDrawings, (req, res) => res.status(200).json(res.locals.drawings));
+
+router.post('/save', controller.saveFile, controller.updateUser, (req, res) => res.status(200).json(res.locals.createdDrawing));
+
+router.post('/loadDrawing', controller.loadFile, (req, res) => res.status(200).json(res.locals.point));
+
+router.post('/postDrawing', controller.postDrawing, (req, res) => res.status(200).json(res.locals.createdPost));
+
 module.exports = router;

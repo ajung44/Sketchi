@@ -6,21 +6,21 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/',
   },
   mode: process.env.NODE_ENV,
   devServer: {
     static: {
       directory: path.join(__dirname, './dist'),
-      publicPath: '/'
+      publicPath: '/',
     },
     port: 8080,
     proxy: {
       '/**': {
         target: 'http://localhost:3000/',
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
   },
   module: {
     rules: [
@@ -30,24 +30,24 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
       },
       {
         test: /\.css$/,
         use: [
           'style-loader',
           'css-loader',
-          'sass-loader'
-        ]
-      }
-    ]
+          'sass-loader',
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Development',
       template: 'index.html',
-    })
-  ]
-}
+    }),
+  ],
+};

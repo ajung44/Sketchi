@@ -6,10 +6,18 @@ class App extends Component {
   render() {
     return(
       <div className='App'>
-        <div className='Logo'>
-          Sketchi
+        <div className='bar1' />
+        <div className='contentBox'>
+          <div className='Logo'>
+            Sketchi
+          </div>
+          <MainContainer />
         </div>
-        <MainContainer />
+        <div className='bar2' />
+        <div className='circle1' />
+        <div className='circle2' />
+        <div className='circle3' />
+        <div className='mascot' />
       </div>
     )
   }

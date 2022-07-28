@@ -17,6 +17,9 @@ class MainContainer extends Component {
       cache: [],
       redoCache: [],
       loggedIn: false,
+      loaded: false,
+      id: '',
+      loadedPoint: null,
       usernameValue: '',
       passwordValue: '',
     };
@@ -32,9 +35,14 @@ class MainContainer extends Component {
     this.changeBrush = this.changeBrush.bind(this);
     this.changeColor = this.changeColor.bind(this);
     this.clearAll = this.clearAll.bind(this);
+    this.fileCall = this.fileCall.bind(this);
+    this.saveFile = this.saveFile.bind(this);
+    this.loadFile = this.loadFile.bind(this);
+    this.postFile = this.postFile.bind(this);
   }
 
   async cachePush(point) {
+    console.log(point)
     await this.setState((prev) => ({
       cache: [...prev.cache, point],
     }));
@@ -57,15 +65,15 @@ class MainContainer extends Component {
   async clearAll() {
     if (this.state.cache.length > 0) {
       const popped = this.state.cache[this.state.cache.length - 1];
+      console.log(this.state.cache);
+      console.log(this.popped);
       if (Array.isArray(popped[0])) {
-        console.log('empty');
         return null;
       }
       await this.setState((prev) => ({
         cache: [...prev.cache, prev.cache],
       }));
 
-      console.log('clear', this.state.cache);
       console.log(this.state.redoCache);
       return this.state.cache;
     }
@@ -111,8 +119,8 @@ class MainContainer extends Component {
       this.setState({ penColor: 'yellow', primaryColor: 'yellow' });
     } else if (tool === 'black') {
       this.setState({ penColor: 'black', primaryColor: 'black' });
-    } else if (tool === 'white') {
-      this.setState({ penColor: 'white', primaryColor: 'white' });
+    } else if (tool === 'green') {
+      this.setState({ penColor: 'green', primaryColor: 'green' });
     }
   }
 
@@ -129,11 +137,11 @@ class MainContainer extends Component {
         password: this.state.passwordValue,
       }),
     });
-    this.setState({ usernameValue: '', passwordValue: '' });
     const result = await response.json();
+    console.log(result);
 
     if (result.success) {
-      this.setState({ loggedIn: true });
+      this.setState({ loggedIn: true, usernameValue: '', passwordValue: '', id: result.id });
     }
   }
 
@@ -148,18 +156,99 @@ class MainContainer extends Component {
         }),
       });
 
-      this.setState({ usernameValue: '', passwordValue: '' });
+      const result = await response.json()
+      console.log(result)
 
       if (response.status === 400) {
         throw new Error();
       }
 
-      this.setState({ loggedIn: true });
+      this.setState({ loggedIn: true , usernameValue: '', passwordValue: '', id: result._id });
     } catch (error) {
       console.log('error');
     }
   }
 
+  async fileCall() {
+    try {
+      const response = await fetch('http://localhost:8080/user/drawings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: this.state.id,
+        }),
+      });
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
+  async loadFile(focus) {
+    try {
+      console.log('focus', focus);
+      const response = await fetch('http://localhost:8080/user/loadDrawing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: focus,
+        }),
+      });
+      const result = await response.json();
+      await this.setState({ loadedPoint: result, redoCache: [], cache: [] });
+      console.log('Point ',this.state.loadedPoint);
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
+  async saveFile() {
+    const newCache = [];
+    if (this.state.loadedPoint !== null) {
+      this.state.loadedPoint.forEach(elem => {
+        newCache.push(elem);
+      })
+    }
+
+    this.state.cache.forEach(elem => {
+      newCache.push(elem);
+    })
+    try {
+      const response = await fetch('http://localhost:8080/user/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          point: newCache,
+          id: this.state.id,
+        }),
+      });
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
+  async postFile(dataURL) {
+    try {
+      console.log(dataURL)
+      const response = await fetch('http://localhost:8080/user/postDrawing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image: dataURL,
+          user: this.state.id,
+        }),
+      });
+      const result = await response.json()
+      console.log(result);
+    } catch (error) {
+      console.log('error');
+    }
+  }
   render() {
     const elem = [];
 
@@ -193,10 +282,13 @@ class MainContainer extends Component {
             clearAll={this.clearAll}
             penColor={this.state.penColor}
             penSize={this.state.penSize}
+            loadedPoint={this.state.loadedPoint}
+            loaded={this.state.loaded}
+            postFile={this.postFile}
           />
         </div>,
       );
-      elem.push(<div key="Right" className="Right"><File key="FileBar" /></div>);
+      elem.push(<div key="Right" className="Right"><File key="FileBar" fileCall={this.fileCall} loadFile={this.loadFile} saveFile={this.saveFile} /></div>);
     } else {
       elem.push(<Login
         key="Logging"

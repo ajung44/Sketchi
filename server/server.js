@@ -27,8 +27,12 @@ if(process.env.NODE_ENV === 'production') {
 
 }
 
-app.use('/user', router);
+app.get('/browse', (req, res) => {
+  console.log('here');
+  return res.status(200).sendFile(path.join(__dirname, '../browser.html'));
+});
 
+app.use('/user', router);
 
 app.use((req, res) => res.sendStatus(404));
 

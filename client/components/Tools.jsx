@@ -13,8 +13,8 @@ function Tools(props) {
         <button className="redBox" onClick={() => props.changeColor('red')}>Red</button>
         <button className="blueBox" onClick={() => props.changeColor('blue')}>Blue</button>
         <button className="yellowBox" onClick={() => props.changeColor('yellow')}>Yellow</button>
+        <button className="greenBox" onClick={() => props.changeColor('green')}>Green</button>
         <button className="blackBox" onClick={() => props.changeColor('black')}>Black</button>
-        <button className="whiteBox" onClick={() => props.changeColor('white')}>White</button>
       </div>
     </div>
   );

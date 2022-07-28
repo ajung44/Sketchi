@@ -60,6 +60,22 @@ controller.getPosts = async (req, res, next) => {
   }
 }
 
+controller.getUserForPosts = async (req, res, next) => {
+  try {
+    const arr = [];
+    res.locals.postings.forEach(elem => {
+      arr.push(elem.user);
+    })
+    console.log(arr);
+    const result = await model.User.find({ '_id': { $in: [ ...arr ] }})
+    console.log(result);
+    res.locals.usernames = result;
+    return next();
+  } catch (error) {
+    return next({ log: 'controller.getUserForPosts', message: `${error} Failed to get Users for posts` });
+  }
+}
+
 controller.fileToDrawings = async (req, res, next) => {
   try {
     //[objid, objid]

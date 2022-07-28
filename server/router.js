@@ -19,6 +19,6 @@ router.post('/postDrawing', controller.postDrawing, (req, res) => res.status(200
 
 router.delete('/deleteFile', controller.deleteFile, controller.updateDelUser, (req, res) => res.status(200).json(res.locals.deletedFile));
 
-router.get('/postings', controller.getPosts, (req, res) => res.status(200).json(res.locals.postings));
+router.get('/postings', controller.getPosts, controller.getUserForPosts, (req, res) => res.status(200).json(res.locals));
 
 module.exports = router;

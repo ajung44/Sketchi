@@ -147,6 +147,8 @@ class MainContainer extends Component {
     if (result.success) {
       this.setState({ loggedIn: true, usernameValue: '', passwordValue: '', id: result.id });
     }
+
+    return result;
   }
 
   async register() {
@@ -319,6 +321,7 @@ class MainContainer extends Component {
             postFile={this.postFile}
             postCall={this.postCall}
           />
+          <div className="cat"/>
         </div>,
       );
       elem.push(<div key="Right" className="Right"><File key="FileBar" fileCall={this.fileCall} deleteFile={this.deleteFile} loadFile={this.loadFile} saveFile={this.saveFile} /></div>);

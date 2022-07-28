@@ -12,8 +12,8 @@ class MainContainer extends Component {
     super(props);
     this.state = {
       penSize: 0.5,
-      penColor: 'black',
-      primaryColor: 'black',
+      penColor: 'gray',
+      primaryColor: 'gray',
       cache: [],
       redoCache: [],
       loggedIn: false,
@@ -39,10 +39,12 @@ class MainContainer extends Component {
     this.saveFile = this.saveFile.bind(this);
     this.loadFile = this.loadFile.bind(this);
     this.postFile = this.postFile.bind(this);
+    this.deleteFile = this.deleteFile.bind(this);
+    this.postCall = this.postCall.bind(this);
   }
 
   async cachePush(point) {
-    console.log(point)
+    console.log('cache Push,', point);
     await this.setState((prev) => ({
       cache: [...prev.cache, point],
     }));
@@ -112,15 +114,17 @@ class MainContainer extends Component {
     } else if (tool === 'eraser') {
       this.setState({ penColor: 'white' });
     } else if (tool === 'red') {
-      this.setState({ penColor: 'red', primaryColor: 'red' });
+      this.setState({ penColor: '#FDC9C9', primaryColor: '#FDC9C9' });
     } else if (tool === 'blue') {
-      this.setState({ penColor: 'blue', primaryColor: 'blue' });
+      this.setState({ penColor: '#C9F4FB', primaryColor: '#C9F4FB' });
     } else if (tool === 'yellow') {
-      this.setState({ penColor: 'yellow', primaryColor: 'yellow' });
+      this.setState({ penColor: '#FFFAC9', primaryColor: '#FFFAC9' });
     } else if (tool === 'black') {
-      this.setState({ penColor: 'black', primaryColor: 'black' });
+      this.setState({ penColor: 'gray', primaryColor: 'gray' });
     } else if (tool === 'green') {
-      this.setState({ penColor: 'green', primaryColor: 'green' });
+      this.setState({ penColor: '#C9EFCB', primaryColor: '#C9EFCB' });
+    } else if (tool === 'purple') {
+      this.setState({ penColor: '#DBC9E9', primaryColor: '#DBC9E9' });
     }
   }
 
@@ -249,6 +253,34 @@ class MainContainer extends Component {
       console.log('error');
     }
   }
+
+  async deleteFile(focus) {
+    try {
+      console.log(focus);
+      const response = await fetch('http://localhost:8080/user/deleteFile', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: focus,
+          user: this.state.id,
+        }),
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
+  async postCall() {
+    try {
+      const response = await fetch('http://localhost:8080/user/postings');
+      const result = await response.json();
+      console.log('post call ', result);
+      return result;
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
   render() {
     const elem = [];
 
@@ -285,10 +317,11 @@ class MainContainer extends Component {
             loadedPoint={this.state.loadedPoint}
             loaded={this.state.loaded}
             postFile={this.postFile}
+            postCall={this.postCall}
           />
         </div>,
       );
-      elem.push(<div key="Right" className="Right"><File key="FileBar" fileCall={this.fileCall} loadFile={this.loadFile} saveFile={this.saveFile} /></div>);
+      elem.push(<div key="Right" className="Right"><File key="FileBar" fileCall={this.fileCall} deleteFile={this.deleteFile} loadFile={this.loadFile} saveFile={this.saveFile} /></div>);
     } else {
       elem.push(<Login
         key="Logging"

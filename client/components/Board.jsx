@@ -89,7 +89,8 @@ function Board(props) {
     if (method === 'undo') {
       contextRef.current.clearRect(0, 0, 500, 500);
       if (props.loadedPoint !== null && !loaded) {
-        for (let i = props.loadedPoint.length - 1; i >= 0; i--) {
+        // for (let i = props.loadedPoint.length - 1; i >= 0; i--) {
+        for (let i = 0; i < props.loadedPoint.length; i++) {
           contextRef.current.beginPath();
           contextRef.current.moveTo(props.loadedPoint[i][0].offsetX, props.loadedPoint[i][0].offsetY);
           contextRef.current.strokeStyle = props.loadedPoint[i][0].strokeStyle;
@@ -108,7 +109,8 @@ function Board(props) {
         contextRef.current.strokeStyle = props.penColor;
         contextRef.current.lineWidth = props.penSize;
       }
-      for (let i = point.length - 1; i >= 0; i--) {
+      // for (let i = point.length - 1; i >= 0; i--) {
+      for (let i = 0; i < point.length; i++) {
         contextRef.current.beginPath();
         contextRef.current.moveTo(point[i][0].offsetX, point[i][0].offsetY);
         contextRef.current.strokeStyle = point[i][0].strokeStyle;
@@ -195,7 +197,7 @@ function Board(props) {
       <div className="PostAndBrowse">
         <button className="postButton" onClick={convertDrawing}>POST</button>
         <Popup trigger={<button>BROWSE</button>} position='right bottom'>
-          <Browser />
+          <Browser postCall={props.postCall}/>
         </Popup>
       </div>
     </div>

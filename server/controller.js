@@ -7,7 +7,7 @@ controller.loginController = async (req, res, next) => {
     const result = await model.User.find({ username: req.body.username }).exec();
     if (result.length === 0) {
       res.locals.success = false;
-      res.locals.reason = 'userNotFound'
+      res.locals.reason = 'userNotFound';
       return next();
     }
 
@@ -40,7 +40,7 @@ controller.signupController = async (req, res, next) => {
 
 controller.getFiles = async (req, res, next) => {
   try {
-    console.log(req.body);
+    console.log('????, ',req.body);
     const allFiles = await model.User.findById(req.body.id);
     console.log('allFiles /n', allFiles);
     res.locals.drawingId = allFiles.drawings;
@@ -50,9 +50,20 @@ controller.getFiles = async (req, res, next) => {
   }
 }
 
+controller.getPosts = async (req, res, next) => {
+  try {
+    const allPosts = await model.Post.find();
+    res.locals.postings = allPosts;
+    return next();
+  } catch (error) {
+    return next({ log: 'controller.getPosts', message: `${error} Failed to get posts` });
+  }
+}
+
 controller.fileToDrawings = async (req, res, next) => {
   try {
     //[objid, objid]
+    console.log('file To Drawings', res.locals.drawingId)
     const drawings = await model.Drawing.find({ _id: { $in: [...res.locals.drawingId] } });
     console.log('drawings here: ', drawings);
     res.locals.drawings = drawings;
@@ -66,7 +77,6 @@ controller.saveFile = async (req, res, next) => {
   try {
     console.log('saving file...', req.body);
     const date = new Date();
-    console.log(date)
     const createdFile = await model.Drawing.create({ fileName: date.toString(), point: req.body.point, user: req.body.id });
     res.locals.createdDrawing = createdFile;
     console.log('created', createdFile);
@@ -107,6 +117,31 @@ controller.postDrawing = async (req, res, next) => {
     return next();
   } catch (error) {
     return next({ log: `controller.postDrawing ${error}`, message: `${error} Failed to post Art` });
+  }
+}
+
+controller.deleteFile = async (req, res, next) => {
+  try {
+    console.log('id',req.body.id);
+    console.log('user',req.body.user);
+    const result = await model.Drawing.findByIdAndDelete(req.body.id);
+    console.log('deleted file:', result);
+    res.locals.deletedFile = result;
+    return next();
+  } catch (error) {
+    return next({ log: `controller.deleteFile ${error}`, message: `${error} Failed to delete File` });
+  }
+}
+
+controller.updateDelUser = async (req, res, next) => {
+  try {
+    console.log('here')
+    console.log('delete', res.locals.deletedFile)
+    const result = await model.User.findOneAndUpdate({ _id: req.body.user}, { "$pull": { "drawings": res.locals.deletedFile._id } });
+    console.log(result);
+    return next();
+  } catch (error) {
+    return next({ log: `controller.updateDelUser ${error}`, message: `${error} Failed to update deleted user` });
   }
 }
 

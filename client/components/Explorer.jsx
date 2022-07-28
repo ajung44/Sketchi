@@ -8,6 +8,7 @@ function Explorer(props) {
   });
 
   useEffect(() => {
+    console.log('test')
     if (!loaded.loaded) {
       props.fileCall()
         .then((result) => {
@@ -34,17 +35,35 @@ function Explorer(props) {
     });
   }
 
+  async function deleteFile() {
+    if (loaded.focus === null) return;
+    await props.deleteFile(loaded.focus);
+    await changeLoaded({
+      ...loaded,
+      focus: null,
+    });
+    props.fileCall()
+      .then((result) => {
+        changeLoaded({
+          ...loaded,
+          list: result,
+        });
+      });
+  }
+
   const list = [];
+  console.log('list, ', loaded.list);
   loaded.list.forEach((elem, index) => {
-    list.push(<button key={`list${index}`} id={elem._id} onClick={(e) => changeLoaded({ ...loaded, focus: e.target.id})}>{elem.fileName}</button>);
+    list.push(<button key={`list${index}`} id={elem._id} onClick={(e) => changeLoaded({ ...loaded, focus: e.target.id })}>{elem.fileName}</button>);
   });
 
   if (list.length === 0) {
     return (
       <div className="fileExplorer">
         <div className="fileButtons">
-          <button onClick={savingFile} >Save</button>
+          <button onClick={savingFile}>Save</button>
           <button>Load</button>
+          <button>Delete</button>
         </div>
         <div className="exploreTable">
           Empty List
@@ -56,8 +75,9 @@ function Explorer(props) {
   return (
     <div className="fileExplorer">
       <div className="fileButtons">
-        <button onClick={savingFile} >Save</button>
+        <button onClick={savingFile}>Save</button>
         <button onClick={loadingFile}>Load</button>
+        <button onClick={deleteFile}>Delete</button>
       </div>
       <div className="exploreTable">
         {list}

@@ -2,10 +2,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: '/client/index.js',
+  entry: {
+    bundle: '/client/index.js',
+    browse: '/client/browse.js',
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     publicPath: '/',
   },
   mode: process.env.NODE_ENV,
